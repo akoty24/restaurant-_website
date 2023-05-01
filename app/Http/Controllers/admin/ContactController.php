@@ -25,5 +25,5 @@ class ContactController extends Controller
             'user_id'=>'required'
         ]);
         $contacts->update($data);
-        return redirect(route('contact'))->with('success', 'contacts updated successfully.');}
+        return redirect()->route('contact')->with('success', 'contacts updated successfully.');}
 }

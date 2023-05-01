@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\admin\FooterController;
+use App\Http\Controllers\admin\MessageController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AboutController;
 use App\Http\Controllers\admin\BookTableController;
 use App\Http\Controllers\admin\CategoryController;
@@ -13,29 +17,35 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\TestimonialController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\WhyChooseYummyController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\FrontendController;
-use Illuminate\Support\Facades\Route;
 
-Route::get('register_page', [RegisterController::class, 'register_page'])->name('register.page');
-Route::get('login_page', [LoginController::class, 'login_page'])->name('login.page');
-Route::post('register', [RegisterController::class, 'register'])->name('register');
-Route::post('login', [LoginController::class, 'login'])->name('login');
-Route::get('logout', [RegisterController::class, 'logout'])->name('logout');
 
-Route::get('/', [FrontendController::class, 'index'])->name('index');
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
 
 
 //Home
-Route::post('/bookTable', [FrontendController::class, 'submitBookTable'])->name('submitBookTable');
+Route::get('/', [FrontendController::class, 'index'])->name('index');
 
-
+Route::middleware('auth')->group(function () {
+    Route::post('/sendMessage', [FrontendController::class, 'sendMessage'])->name('send.message');
+    Route::post('/bookTable', [FrontendController::class, 'submitBookTable'])->middleware('auth')->name('submitBookTable');
+});
+//admin
 Route::middleware(['auth','auth.admin'])->group(function () {
 //admin
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+
     Route::group(['prefix' => 'admin'], function () {
 //cover
         Route::group(['prefix' => 'cover'], function () {
@@ -88,6 +98,11 @@ Route::middleware(['auth','auth.admin'])->group(function () {
             Route::get('/', [ContactController::class, 'index'])->name('contact');
             Route::post('update', [ContactController::class, 'update'])->name('contact.update');
         });
+        //footer
+        Route::group(['prefix' => 'footer'], function () {
+            Route::get('/', [FooterController::class, 'index'])->name('footer');
+            Route::post('update', [FooterController::class, 'update'])->name('footer.update');
+        });
 //Category
         Route::group(['prefix' => 'category'], function () {
             Route::get('/', [CategoryController::class, 'index'])->name('category');
@@ -128,6 +143,10 @@ Route::middleware(['auth','auth.admin'])->group(function () {
             Route::get('edit/{id}', [UserController::class, 'edit'])->name('user.edit');
             Route::post('update/{id}', [UserController::class, 'update'])->name('user.update');
             Route::get('delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+        });
+        //messages
+        Route::group(['prefix' => 'message'], function () {
+            Route::get('/', [MessageController::class, 'index'])->name('message');
         });
     });
 });

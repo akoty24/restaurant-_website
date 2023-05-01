@@ -1,8 +1,12 @@
 @extends('front.layout.app')
 
-@section('content')
+
 <!-- ======= Hero Section ======= -->
+@section('content')
+
+
 <section id="hero" class="hero d-flex align-items-center section-bg">
+
     <div class="container">
         @foreach ($covers as $cover)
             <div class="row justify-content-between gy-5">
@@ -14,6 +18,7 @@
                         <a href="{{ '#book-a-table' }}" class="btn-book-a-table">Book a Table</a>
                         <a href="{{ $cover->video }}" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
                     </div>
+
                 </div>
                 <div class="col-lg-5 order-1 order-lg-2 text-center text-lg-start">
                     <img src="{{ url('admin/img/cover/', $cover->image) }}" class="img-fluid" alt="" data-aos="zoom-out"
@@ -123,29 +128,31 @@
 
                 <div class="col-lg-3 col-md-6">
                     <div class="stats-item text-center w-100 h-100">
-                        <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
+                        @if(\App\Models\Chef::class)
+                        <span data-purecounter-start="0" data-purecounter-end="{{\App\Models\Chef::all()->count()}}" data-purecounter-duration="1" class="purecounter"></span>
+                       @endif
+                        <p>Chefs</p>
+                    </div>
+                </div><!-- End Stats Item -->
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-item text-center w-100 h-100">
+                        <span data-purecounter-start="0" data-purecounter-end="{{\App\Models\User::all()->count()}}" data-purecounter-duration="1" class="purecounter"></span>
                         <p>Clients</p>
                     </div>
                 </div><!-- End Stats Item -->
 
                 <div class="col-lg-3 col-md-6">
                     <div class="stats-item text-center w-100 h-100">
-                        <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-                        <p>Projects</p>
+                        <span data-purecounter-start="0" data-purecounter-end="{{\App\Models\Category::all()->count()}}" data-purecounter-duration="1" class="purecounter"></span>
+                        <p>Categories</p>
                     </div>
                 </div><!-- End Stats Item -->
 
                 <div class="col-lg-3 col-md-6">
                     <div class="stats-item text-center w-100 h-100">
-                        <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter"></span>
-                        <p>Hours Of Support</p>
-                    </div>
-                </div><!-- End Stats Item -->
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="stats-item text-center w-100 h-100">
-                        <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter"></span>
-                        <p>Workers</p>
+                        <span data-purecounter-start="0" data-purecounter-end="{{\App\Models\Product::all()->count()}}" data-purecounter-duration="1" class="purecounter"></span>
+                        <p>Products</p>
                     </div>
                 </div><!-- End Stats Item -->
 
@@ -155,51 +162,62 @@
     </section><!-- End Stats Counter Section -->
 
     <!-- ======= Menu Section ======= -->
-    <section id="menu" class="menu mt-5">
-        <div class="container" data-aos="fade-up">
-
-            <div class="section-header">
-                <h2>Our Menu</h2>
-                <p>Check Our <span>Yummy Menu</span></p>
-            </div>
-
-
-            <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="200">
-                @foreach ($categories as $menuCategory)
-                    <li class="nav-item">
-                        <a class="nav-link show" data-bs-toggle="tab" href="{{ "#menu/$menuCategory->id" }}">
-                            <h4>{{ $menuCategory->name }}</h4>
-                        </a>
-                    </li><!-- End tab nav item -->
-                @endforeach
-            </ul>
-
-            <div class="tab-content" data-aos="fade-up" class="collapse" data-aos-delay="300">
-                <div class="tab-pane fade active show" id="{{ "menu/$menuCategory->id" }}">
-                    <div class="tab-header text-center">
-                        <p>Menu</p>
-                        <h3>{{ $menuCategory->name }}</h3>
+            <section id="menu" class="menu">
+                <div class="container" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2>Our Menu</h2>
+                        <p>Check Our <span>Yummy Menu</span></p>
                     </div>
-                    <div class="row gy-5">
-                        @foreach ($products as $menuItem)
-                            <div class="col-lg-4 menu-item">
-                                <a href="{{ url('admin/img/product/',$menuItem->image) }}" class="glightbox"><img src="{{ url('admin/img/product/',$menuItem->image) }}" class="menu-img img-fluid" alt=""></a>
-                                <h4>{{ $menuItem->name }}</h4>
-                                <p class="ingredients">
-                                {{ $menuItem->desc }}
-                                <p class="price">
-                                    {{ "$".$menuItem->price }}
-                                </p>
-                            </div><!-- Menu Item -->
-                        @endforeach
-                    </div>
+                    <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="200">
+                        @isset($categories)
+                            @foreach ($categories as $category)
+                        <li class="nav-item" >
+                            <a href="{{route('index',['category'=>$category->id])}}" class="nav-link show">
+                                <h4 >{{ $category->name }}</h4>
+                            </a>
+                        </li><!--End tab nav item-->
+                            @endforeach
+                        @endisset
+                    </ul>
+                    <div class="tab-content" data-aos="fade-up" data-aos-delay="300">
+                        <div class="tab-pane fade active show" id="menu">
 
+                            <div class="tab-header text-center">
+                                <p>Menu</p>
+                                <h3>{{ $categoryName }}</h3>
+                            </div>
+
+                            <div class="row gy-5">
+
+                                @foreach ($products as $menuItem)
+                                    <div class="col-lg-4 menu-item">
+                                        <a href="{{ url('admin/img/product/',$menuItem->image) }}" class="glightbox"><img src="{{ url('admin/img/product/',$menuItem->image) }}" class="menu-img img-fluid" alt=""></a>
+                                        <h4>{{ $menuItem->name }}</h4>
+                                        <p class="ingredients">
+                                        {{ $menuItem->desc }}
+                                        <p class="price">
+                                            {{ "$".$menuItem->price }}
+                                        </p>
+                                    </div><!-- Menu Item -->
+                                @endforeach
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-            </div>
+{{--            <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="200">--}}
+{{--                @foreach ($categories as $category)--}}
+{{--                    <li class="nav-item">--}}
+{{--                        <a href="category={{$category->id}}" class="nav-link show " data-bs-toggle="tab">--}}
+{{--                            <h4>{{ $category->name }}</h4></a>--}}
+{{--                    </li><!-- End tab nav item -->--}}
 
-        </div>
-    </section>
+{{--                @endforeach--}}
+{{--            </ul>--}}
+
+
     <!-- ======= Testimonials Section ======= -->
     <section id="testimonials" class="testimonials section-bg">
         <div class="container" data-aos="fade-up">
@@ -246,7 +264,7 @@
             </div>
 
         </div>
-    </section>><!-- End Testimonials Section -->
+    </section><!-- End Testimonials Section -->
 
     <!-- ======= Event Section ======= -->
     <section id="events" class="events">
@@ -337,53 +355,53 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{route('submitBookTable')}}" method="post" >
-                     <div style="padding: 126px">
-                         <div class="row">
-                                <div class="form-group" style="width: 50%;">
-                                    <label for="exampleInputName1">Name</label>
-                                    <input type="name" name="name" class="form-control" id="exampleInputName1"
-                                           placeholder="Enter name"{{ old('name') }}>
-                                </div>
-                                <div class="form-group" style="width: 50%;">
-                                    <label for="exampleInputEmail1">Email address</label>
-                                    <input type="email" name="email" class="form-control" id="exampleInputEmail1"
-                                           placeholder="Enter email"{{ old('email') }}>
-                                </div>
-                            </div>
-                        <div class="row">
-                            <div class="form-group" style="width: 50%;">
-                                <label for="exampleInputPhone1">Phone</label>
-                                <input type="phone" name="phone" class="form-control" id="exampleInputPhone1"
-                                       placeholder="Enter phone"{{ old('phone') }}>
-                            </div>
-                            <div class="form-group" style="width: 50%;">
-                                <label for="exampleInputDate1">Date</label>
-                                <input type="date" name="date" class="form-control" id="exampleInputDate1"
-                                       min="{{ date('Y-m-d') }}"{{ old('date') }}>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group" style="width: 50%;">
-                                <label for="exampleInputTime1">Time</label>
-                                <input type="time" name="time" class="form-control" id="exampleInputTime1"
-                                       min="{{ now() }}"{{ old('time') }}>
-                            </div>
-                            <div class="form-group" style="width: 50%;">
-                                <label for="exampleInputNumber1">Number of People</label>
-                                <input type="number" name="people" class="form-control" id="exampleInputNumber1" min="1"
-                                       max="50" placeholder="Enter number of people"{{ old('people') }}>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                                <label for="exampleInputMessage1">Message</label>
-                                <textarea name="message" class="form-control" id="exampleInputMessage1" cols="30" rows="4"
-                                          placeholder="Enter your message">{{ old('message') }}</textarea>
-                            </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-danger">Book a Table</button>
-                        </div>
-                     </div>
+
+                    <form action="{{route('submitBookTable')}}" method="POST" style="margin-left: 60px;margin-right: 20px">
+
+                        @csrf
+                        <div class="row gy-4">
+                                     <div class="col-lg-4 col-md-6">
+                                         <input type="text" class="form-control" name="name" placeholder="Full Name"
+                                                aria-label="Full Name"data-rule="minlen:4"
+                                                data-msg="Please enter at least 4 chars">
+                                     </div>
+                                     <div class="col-lg-4 col-md-6">
+                                         <input type="email" class="form-control" name="email" placeholder="Email"
+                                                aria-label="Email" data-rule="email" data-msg="Please enter a valid email">
+                                     </div>
+                                     <div class="col-lg-4 col-md-6">
+                                         <input type="text" class="form-control" name="phone"
+                                                placeholder="Mobile Number" aria-label="Mobile Number"data-rule="minlen:10"
+                                                data-msg="Please enter at least 10 chars">
+                                     </div>
+                                     <div class="col-lg-4 col-md-6">
+                                         <input type="date" class="form-control" name="date" placeholder="Date"
+                                                aria-label="Date" data-rule="minlen:4" data-msg="Please enter at least 4 chars"
+                                                min="{{ date('Y-m-d') }}">
+                                     </div>
+                                     <div class="col-lg-4 col-md-6">
+                                         <input type="time" class="form-control" name="time" placeholder="Time"
+                                                data-rule="minlen:4" data-msg="Please enter at least 4 chars" aria-label="Time">
+                                     </div>
+                                     <div class="col-lg-4 col-md-6">
+                                         <input type="number" class="form-control" name="people"
+                                                placeholder="Count of People" aria-label="Count of People" data-rule="minlen:4"
+                                                data-msg="Please enter at least 4 chars">
+                                     </div>
+                                     <div class="form-group mt-3">
+                                    <textarea class="form-control" name="message" placeholder="Leave a comment here" rows="5"
+                                              id="floatingTextarea"></textarea>
+                                     </div>
+                                     <div class="form-group">
+                                         <label for="exampleInputTitle" hidden>User</label>
+
+                                         <input name="user_id" class="form-control" value="" id="exampleInputTitle" hidden>
+
+                                     </div>
+                                 </div>
+                                 <div class="d-grid gap-2 col-6 mx-auto">
+                                     <button class="btn btn-danger" name="submit" type="submit">Book Table</button>
+                                 </div>
                     </form>
                 </div><!-- End Reservation Form -->
 
@@ -405,15 +423,14 @@
             <div class="gallery-slider swiper">
                 <div class="swiper-wrapper align-items-center">
                     @foreach ($galleries as $gallery)
-                        <div class="swiper-slide"><a class="glightbox" data-gallery="images-gallery"
-                                                     href="{{ url('admin/img/gallery/',$gallery->image) }}"><img
-                                        src="{{ url('admin/img/gallery/',$gallery->image) }}" class="img-fluid"
-                                        alt=""></a></div>
+                        <div class="swiper-slide">
+                            <a class="glightbox" data-gallery="images-gallery" href="{{ url('admin/img/gallery/',$gallery->image) }}"><img src="{{ url('admin/img/gallery/',$gallery->image) }}" class="img-fluid" alt="">
+                            </a>
+                        </div>
                     @endforeach
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
-
         </div>
     </section><!-- End Gallery Section -->
 
@@ -475,7 +492,7 @@
                     @endforeach
                 </div>
                 <br>
-                <form action="" method="post" role="form">
+                <form action="{{route('send.message')}}" method="post" role="form">
                     @csrf
                     <div class="row gy-4">
                         <div class="col-xl-6 form-group">
@@ -500,36 +517,11 @@
                         <button class="btn btn-danger" name="submit" type="submit">Send Message</button>
                     </div>
                 </form>
-                {{-- <form action="{{ '/message' }}" method="POST" role="form" class="php-email-form p-3 p-md-4">
-                    @csrf
-                    <div class="row">
-                        <div class="col-xl-6 form-group">
-                            <input type="text" name="name" class="form-control" id="name"
-                                placeholder="Your Name" required>
-                        </div>
-                        <div class="col-xl-6 form-group">
-                            <input type="email" class="form-control" name="email" id="email"
-                                placeholder="Your Email" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-                    </div>
-                    <div class="my-3">
-                        <div class="loading">Loading</div>
-                        <div class="error-message"></div>
-                        <div class="sent-message">Your message has been sent. Thank you!</div>
-                    </div>
-                    <div class="text-center"><button type="submit">Send Message</button></div>
-                </form> --}}
-                <!--End Contact Form -->
+
 
         </div>
     </section><!-- End Contact Section -->
 
 </main><!-- End #main -->
 @endsection
+

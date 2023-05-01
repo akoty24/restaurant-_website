@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Mail\BookTableMail;
 use App\Http\Controllers\Controller;
 use App\Models\BookTable;
 use App\Models\User;
-use App\Notifications\TableBooked;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 
 class BookTableController extends Controller
 {
     public function index()
     {
-        $bookTables= BookTable::paginate(3);
+        $bookTables= BookTable::all();
         return view('admin.bookTable.book_table',compact("bookTables"));
     }
 
@@ -32,11 +31,14 @@ class BookTableController extends Controller
             'time'=>'required',
             'people'=> 'required|numeric|min:1|max:300',
             'message'=>'required|string',
-            'user_id'=>'required'
+            'user_id'=>'required',
         ]);
-        BookTable::create($data);
+        $bookTable = BookTable::create($data);
 
-        return redirect()->route('book_table');
+        Mail::to($data->email)->send(new BookTableMail($bookTable));
+
+
+        return redirect()->route('book_table')->with('message','you Booked table successfully . please wait our response to confirm your reservation');
     }
     public function edit($id)
     {
@@ -57,12 +59,12 @@ class BookTableController extends Controller
             'user_id'=>'required'
         ]);
         $bookTables->update($data);
-        return redirect()->route('book_table')->with('success', 'bookTables updated successfully.');
+        return redirect()->route('book_table')->with('message', 'bookTables updated successfully.');
     }
     public function delete($id)
     {
         $bookTables = BookTable::findOrFail($id);
         $bookTables->delete();
-        return redirect()->route('book_table')->with('success', 'BookTable deleted successfully');
+        return redirect()->route('book_table')->with('message', 'BookTable deleted successfully');
     }
 }

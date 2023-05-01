@@ -32,7 +32,6 @@
     <div class="container w-50"><a href="{{route('book_table.create')}}"><button
         class="btn btn-block btn-success btn-lg">Add Book Table</button></a>
 </div>    <div class="card-body">
-        <div class="float-right">{{ $bookTables->links() }}</div>
         <table class="table table-bordered">
             <thead>
                 <tr>

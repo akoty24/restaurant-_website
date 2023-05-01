@@ -18,14 +18,15 @@ class AuthAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()){
-            if($request->user()->type==1){
+
+        if (Auth::check()) {
+            if ($request->user()->type == 1) {
                 return $next($request);
-            }else{
-                return redirect('/login_page')->with('You do not have any permission to access this page');
+            } else {
+                return redirect()->route('index')->with('message','You do not have any permission to access this page');
             }
         } else {
-            return redirect('/login_page')->with('login to access the website info');
+            return redirect()->route('login')->with('message','login to access the website info');
         }
     }
 }

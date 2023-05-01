@@ -77,14 +77,22 @@
                             @if(Auth::user()->type=='1')
                             <a class="dropdown-item" href="{{route('dashboard')}}"> Dashboard </a>
                             @endif
-                            <a class="dropdown-item" href="{{route('logout')}}"> Logout </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <x-dropdown-link :href="route('logout')"
+                                                     onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                        {{ __('Log Out') }}
+                                    </x-dropdown-link>
+                                </form>
 
                         </div>
                     </li>
                     @else
                         <div >
-                            <a style="padding: 10px" title="" href="{{route('register.page')}}">Register</a>
-                            <a title="" href="{{route('login.page')}}">Login</a>
+                            <a style="padding: 10px" title="" href="{{route('register')}}">Register</a>
+                            <a title="" href="{{route('login')}}">Login</a>
                         </div>
 
                     @endif
@@ -104,13 +112,13 @@
 
     <div class="container">
         <div class="row gy-3">
+            @foreach($footer as $footeritem)
             <div class="col-lg-3 col-md-6 d-flex">
                 <i class="bi bi-geo-alt icon"></i>
                 <div>
                     <h4>Address</h4>
-                    <p>
-                        A108 Adam Street <br>
-                        New York, NY 535022 - US<br>
+                    <p> {{$footeritem->address}}
+
                     </p>
                 </div>
 
@@ -121,8 +129,8 @@
                 <div>
                     <h4>Reservations</h4>
                     <p>
-                        <strong>Phone:</strong> +1 5589 55488 55<br>
-                        <strong>Email:</strong> info@example.com<br>
+                        <strong>Phone:</strong>+2{{$footeritem->phone}}<br>
+                        <strong>Email:</strong> {{$footeritem->email}}<br>
                     </p>
                 </div>
             </div>
@@ -132,8 +140,9 @@
                 <div>
                     <h4>Opening Hours</h4>
                     <p>
-                        <strong>Mon-Sat: 11AM</strong> - 23PM<br>
-                        Sunday: Closed
+                        <strong>Open At:</strong> {{$footeritem->open_at}}<br>
+                        <strong>Closed At:</strong> {{$footeritem->close_at}}<br>
+
                     </p>
                 </div>
             </div>
@@ -141,13 +150,13 @@
             <div class="col-lg-3 col-md-6 footer-links">
                 <h4>Follow Us</h4>
                 <div class="social-links d-flex">
-                    <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                    <a href="mailto:{{$footeritem->email}}" class="email"><i class="bi bi-google"></i></a>
+                    <a href="{{$footeritem->facebook}}" class="facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="{{$footeritem->instagram}}" class="instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="{{$footeritem->linkedin}}" class="linkedin"><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
-
+            @endforeach
         </div>
     </div>
 
@@ -160,7 +169,7 @@
             <!-- You can delete the links only if you purchased the pro version. -->
             <!-- Licensing information: https://bootstrapmade.com/license/ -->
             <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/yummy-bootstrap-restaurant-website-template/ -->
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            Designed by <a href="https://bootstrapmade.com/">mohamed saber</a>
         </div>
     </div>
 
@@ -181,7 +190,13 @@
 
 <!-- Template Main JS File -->
 <script src="{{url('front/assets/js/main.js')}}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+@if(Session::has('message'))
+    <script>
+        swal("Message!","{{Session::get('message')}}",{button:"OK"})
+    </script>
+@endif
+@yield('script')
 </body>
 
 </html>

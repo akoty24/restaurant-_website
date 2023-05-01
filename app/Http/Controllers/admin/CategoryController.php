@@ -28,6 +28,7 @@ class CategoryController extends Controller
         return view('admin.category.edit',compact('categories'));
     }
     public function update(Request $request, $id)
+
     {
         $categories = Category::findOrFail($id);
         $data = $request->validate([

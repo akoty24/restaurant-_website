@@ -106,8 +106,16 @@
 
                 <ul class="navbar-nav">
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a class="dropdown-item" href="{{route('logout')}}"> Logout </a>
 
+                        <form method="POST" class="dropdown-item" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')" class="dropdown-item"
+                                             onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
                     </li>
                 </ul>
 
@@ -222,16 +230,16 @@
                                 <li class="nav-item menu">
                                     <a href="#" class="nav-link active">
                                         <p>
-                                            Contact Us
+                                            Messages
                                             <i class="right fas fa-angle-left"></i>
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview">
 
                                         <li class="nav-item">
-                                            <a href="" class="nav-link">
+                                            <a href="{{route('message')}}" class="nav-link">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Mail </p>
+                                                <p>Messages </p>
                                             </a>
                                         </li>
                                     </ul>
@@ -289,13 +297,7 @@
                                                     <p>Why choose yummy?</p>
                                                 </a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a href="" class="nav-link">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p>Stats </p>
-                                                </a>
 
-                                            </li>
                                             <li class="nav-item">
                                                 <a href="{{route('testimonial')}}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
@@ -319,6 +321,12 @@
                                                 <a href="{{route('contact')}}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Contact Details </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{{route('footer')}}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Footer items </p>
                                                 </a>
                                             </li>
                                         </ul>
@@ -370,7 +378,15 @@
                 </div>
             </footer>
             @elseif (Auth::user())
-                <a class="dropdown-item" href="{{route('logout')}}"> Logout </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-dropdown-link :href="route('logout')"
+                                     onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form>
             @endif
             <!-- Control Sidebar -->
             <aside class="control-sidebar control-sidebar-dark">
@@ -414,6 +430,25 @@
         <script src="{{ asset('admin/dist/js/demo.js')}}"></script>
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
         <script src="{{ asset('admin/dist/js/pages/dashboard.js')}}"></script>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        @if(Session::has('message'))
+            <script>
+                swal("Message!","{{Session::get('message')}}",{button:"OK"})
+            </script>
+        @endif
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        @if(Session::has('success'))
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: '{{Session::get('success')}}',
+                    showConfirmButton: false,
+                    timer: 1500});
+            </script>
+        @endif
+
 
     </div>
 </body>

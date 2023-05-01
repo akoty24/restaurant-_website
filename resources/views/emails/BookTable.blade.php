@@ -1,4 +1,14 @@
-// resources/views/mail/test-email.blade.php
-Hey,
-Can your Laravel app send emails yet? 😉
-Funny Coder
+<h2>Hey, It's me {{ $user->name }}</h2>
+<br>
+
+<strong>Book Table details: </strong><br>
+<strong>Name: </strong>{{ $user->name }} <br>
+<strong>Email: </strong>{{ $user->email }} <br>
+<strong>Phone: </strong>{{ $user->phone }} <br>
+<strong>Date: </strong>{{ $user->date }} <br>
+<strong>Time: </strong>{{ $user->time }} <br>
+<strong>People: </strong>{{ $user->people }} <br>
+<strong>Message: </strong>{{ $user->message }} <br>
+<br>
+
+Thank you
